@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import RegisterList from "./RegisterList";
 
 const RegisterForm = () => {
   const [name, setName] = useState("")
@@ -8,6 +10,14 @@ const RegisterForm = () => {
   const [nameError, setNameError] = useState(true)
   const [idError, setIdError] = useState(true)
   const [pwError, setPwError] = useState(true)
+
+  const [userList, setUserList] = useState([])
+  useEffect(() => {
+    axios
+    .get("http://localhost:8080/userlist")
+    .then((res) => setUserList(res.data))
+  }, [])
+
 
   const validateName = (name) => {
     if (name.length < 1 || name.length > 10) {
@@ -64,6 +74,16 @@ const RegisterForm = () => {
   const handleSubmit = () => {
     if (!nameError && !idError && !pwError) {
       alert("회원가입에 성공했습니다.")
+      const newUser = {name, id:identification, pw:password}
+      let copied = [...userList]
+      axios
+        .post("http://localhost:8080/register", newUser)
+        .then(res => {
+          copied.push(res.data)
+          setUserList(copied)
+          handleReset()
+        });
+
     }
     else {
       alert("회원가입에 실패했습니다. 다시 한 번 확인해주세요.")
@@ -71,83 +91,82 @@ const RegisterForm = () => {
   }
 
   return (
-    <form className="form-container">
-      <fieldset className="form-fieldset">
-        <label htmlFor="name">
-          이름 :
-        </label>
-        <input
-          value={name}
-          id="name"
-          onChange={handleNameChange}
-          type="text"
-          name="name"
-          placeholder="이름을 입력해 주세요."
-        >
-        </input>
-        <div>
-          {nameError ? "이름은 1글자 이상, 10글자 이하여야 합니다.": null}
+    <>
+      <form className="form-container">
+        <fieldset className="form-fieldset">
+          <label htmlFor="name">
+            이름 :
+          </label>
+          <input
+            value={name}
+            id="name"
+            onChange={handleNameChange}
+            type="text"
+            name="name"
+            placeholder="이름을 입력해 주세요."
+          >
+          </input>
+          <div>
+            {nameError ? "이름은 1글자 이상, 10글자 이하여야 합니다.": null}
+          </div>
+        </fieldset>
+
+        <fieldset className="form-fieldset">
+          <label htmlFor="identification">
+            아이디 :
+          </label>
+          <input
+            value={identification}
+            id="identification"
+            onChange={handleIdChange}
+            type="text"
+            name="identification"
+            placeholder="아이디를 입력해 주세요."
+          >
+          </input>
+          <div>
+            {idError ? "아이디는 4글자 이상이어야 합니다.": null}
+          </div>
+        </fieldset>
+
+        <fieldset className="form-fieldset">
+          <label htmlFor="identification">
+            비밀번호 :
+          </label>
+          <input
+            value={password}
+            id="password"
+            onChange={handlePwChange}
+            type="password"
+            name="password"
+            placeholder="비밀번호를 입력해 주세요."
+          >
+          </input>
+          <div>
+            {pwError ? "비밀번호는 특수문자 1개를 포함하여 4글자 이상이어야 합니다.": null}
+          </div>
+        </fieldset>
+
+        <div className="button-container">
+          <button
+            onClick={handleReset}
+            type="button"
+            className="form-button reset-button"
+          >
+            초기화
+          </button>
+
+          <button
+            onClick={handleSubmit}
+            type="button"
+            className="form-button submit-button"
+          >
+            제출
+          </button>
         </div>
-      </fieldset>
-
-      <fieldset className="form-fieldset">
-        <label htmlFor="identification">
-          아이디 :
-        </label>
-        <input
-          value={identification}
-          id="identification"
-          onChange={handleIdChange}
-          type="text"
-          name="identification"
-          placeholder="아이디를 입력해 주세요."
-        >
-        </input>
-        <div>
-          {idError ? "아이디는 4글자 이상이어야 합니다.": null}
-        </div>
-      </fieldset>
-
-      <fieldset className="form-fieldset">
-        <label htmlFor="identification">
-          비밀번호 :
-        </label>
-        <input
-          value={password}
-          id="password"
-          onChange={handlePwChange}
-          type="password"
-          name="password"
-          placeholder="비밀번호를 입력해 주세요."
-        >
-        </input>
-        <div>
-          {pwError ? "비밀번호는 특수문자 1개를 포함하여 4글자 이상이어야 합니다.": null}
-        </div>
-      </fieldset>
-
-      <div className="button-container">
-        <button
-          onClick={handleReset}
-          type="button"
-          className="form-button reset-button"
-        >
-          초기화
-        </button>
-
-        <button
-          onClick={handleSubmit}
-          type="button"
-          className="form-button submit-button"
-        >
-          제출
-        </button>
-      </div>
-
-
-    </form>
-
-    
+        <RegisterList userList={userList}/>
+      </form>
+    </>
   )
 }
 
