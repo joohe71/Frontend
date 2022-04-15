@@ -15,7 +15,10 @@ const RegisterForm = () => {
   useEffect(() => {
     axios
     .get("http://localhost:8080/userlist")
-    .then((res) => setUserList(res.data))
+    .then((res) => {
+      console.log(res.data)
+      setUserList(res.data)
+    })
   }, [])
 
 
