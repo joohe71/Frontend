@@ -1,10 +1,26 @@
 const RegisterList = ({userList}) => {
 
   return (
-    <div>
-      <h4>실시간 회원가입 유저 리스트</h4>
-      {userList.map((item) => <p key={item._id}>{item.id} 님이 회원가입 하셨습니다.</p>)}
-    </div>
+    <table style={{width:"100%"}}>
+      <caption>실시간 회원가입 유저 리스트</caption>
+      <thead>
+        <tr>
+          <th>user_name</th>
+          <th>id</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {userList.map((item) => {
+          return (
+            <tr key={item._id}>
+              <td>{item.name}</td>
+              <td>{item.id}</td>
+          </tr>
+          )
+        })}
+      </tbody>
+    </table>
   )
 }
 
