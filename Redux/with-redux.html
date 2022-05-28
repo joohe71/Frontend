@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Redux</title>
+    <!-- redux cdn 사용하기 -->
+    <script src="https://unpkg.com/redux@latest/dist/redux.min.js"></script>
+  </head>
+  <body>
+    <style>
+      .container {
+        border: 5px solid black;
+        padding: 10px;
+      }
+    </style>
+    <div id="red"></div>
+    <div id="green"></div>
+    <div id="blue"></div>
+
+    <script type="module">
+      // 새로운 state 값을 만들어주는 함수
+      const reducer = (state, action) => {
+        // 초기 값 설정
+        if (state === undefined) {
+          return { color: "yellow" };
+        }
+      };
+
+      var store = Redux.createStore(reducer);
+
+      const red = () => {
+        const state = store.getState();
+        document.querySelector("#red").innerHTML = `
+      <div class="container" id="component_red" style="background-color:${state.color}">
+        <h1>red</h1>
+        <input type="button" value="fire" onclick="
+          document.querySelector('#component_red').style.backgroundColor = 'red';
+          document.querySelector('#component_green').style.backgroundColor = 'red';
+          document.querySelector('#component_blue').style.backgroundColor = 'red';">         
+      </div>`;
+      };
+      red();
+    </script>
+  </body>
+</html>
